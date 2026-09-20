@@ -1,6 +1,4 @@
-# Entity-Relationship (ER) Diagram
-
-```mermaid
+# Entity-Relationship(ER) Diagram
 erDiagram
     USER ||--o{ TASK : "creates"
     USER ||--o{ TASK_ASSIGNMENT : "assigned to"
