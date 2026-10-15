@@ -136,18 +136,48 @@ Airport-Staff-Management/
 
 ---
 
-## 🔑 Demo Accounts & Test Credentials
+## 🔑 Authorized System Accounts & Credentials
 
-The login screen features **1-Click Quick Demo Login** buttons for instant testing without manual typing:
+The system comes pre-provisioned with authorized production credentials stored securely in SQLite (`airport_ground_staff.db`):
 
-| Role | Email | Password | Permissions |
-| :--- | :--- | :--- | :--- |
-| **Supervisor** | `supervisor@airport.com` | `admin123` | Full dispatch, zones, staff directory, metrics |
-| **Ground Staff 1** | `staff1@airport.com` | `staff123` | View assigned tasks, update status, shifts |
-| **Ground Staff 2** | `staff2@airport.com` | `staff123` | View assigned tasks, update status, shifts |
-| **Ground Staff 3** | `staff3@airport.com` | `staff123` | View assigned tasks, update status, shifts |
+| Role | Name | Email | Password | Permissions & Department |
+| :--- | :--- | :--- | :--- | :--- |
+| **Admin** | Operations Admin | `admin@airport.com` | `Admin@123` | Full admin privileges, task dispatch, zones, staff management |
+| **Supervisor** | Marcus Vance | `supervisor@airport.com` | `Supervisor@123` | Shift supervision, ramp oversight, task creation & assignment |
+| **Ground Staff (Emp 1)** | John Miller | `employee1@airport.com` | `Employee@123` | Baggage Handling, task status updates, shift duty log |
+| **Ground Staff (Emp 2)** | Sarah Jenkins | `employee2@airport.com` | `Employee@123` | Ramp Marshalling & FOD safety, task updates, duty log |
+| **Ground Staff (Emp 3)** | Michael Chen | `employee3@airport.com` | `Employee@123` | Aircraft Refueling & bay operations, task updates, duty log |
+| **Ground Staff (Emp 4)** | Emily Davis | `employee4@airport.com` | `Employee@123` | Gate 12 Turnaround & cabin cleaning, task updates, duty log |
+| **Ground Staff (Emp 5)** | David Wilson | `employee5@airport.com` | `Employee@123` | Cargo Loading & logistics, task updates, duty log |
 
 ---
+
+## 🗄️ Database Verification & Health Check
+
+You can verify that the SQLite database is active and operational through 3 different methods:
+
+### 1. Terminal / Batch Command (Immediate Diagnostic)
+```powershell
+# Run the diagnostic script:
+.\check_db.bat
+
+# Or run directly via Python:
+python check_database.py
+```
+This tests SQLite connection, verifies table records, and validates bcrypt password hashes.
+
+### 2. Live API Health Endpoint
+Open in browser or query via curl:
+```
+http://127.0.0.1:8000/api/database/status
+```
+Returns JSON with live table counts, SQLite connection state, and file verification.
+
+### 3. Interactive Web UI
+Log in as `admin@airport.com` or `supervisor@airport.com` to view live records in **Ground Staff Directory** (`/staff`), **Operations Dashboard** (`/`), and **Airport Zones** (`/zones`).
+
+---
+
 
 ## 🚀 Quick Start (Development Mode)
 
