@@ -30,10 +30,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
 
 def require_supervisor(current_user: User = Depends(get_current_user)) -> User:
-    """Ensure current user has Supervisor role."""
-    if current_user.role.lower() != "supervisor":
+    """Ensure current user has Supervisor or Admin role."""
+    if current_user.role.lower() not in ["supervisor", "admin"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access restricted to Supervisors only"
+            detail="Access restricted to Supervisors and Admins only"
         )
     return current_user
+

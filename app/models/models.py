@@ -1,7 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 
 class User(Base):
@@ -12,7 +16,7 @@ class User(Base):
     email = Column(String(120), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     role = Column(String(50), nullable=False, default="Ground Staff")  # "Supervisor" or "Ground Staff"
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
 
     # Relationships
     created_tasks = relationship("Task", back_populates="creator", foreign_keys="Task.created_by")
@@ -40,7 +44,7 @@ class Task(Base):
     priority = Column(String(50), nullable=False, default="Medium")  # Low, Medium, High, Critical
     status = Column(String(50), nullable=False, default="Pending")  # Pending, In Progress, Completed
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
 
     # Relationships
     creator = relationship("User", back_populates="created_tasks", foreign_keys=[created_by])
@@ -54,8 +58,8 @@ class TaskAssignment(Base):
     id = Column(Integer, primary_key=True, index=True)
     task_id = Column(Integer, ForeignKey("tasks.id"), nullable=False)
     staff_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    assigned_at = Column(DateTime, default=datetime.utcnow)
-    completed_at = Column(DateTime, nullable=True)
+    assigned_at = Column(DateTime(timezone=True), default=utcnow)
+    completed_at = Column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     task = relationship("Task", back_populates="assignments")
@@ -67,8 +71,9 @@ class Shift(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     staff_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    shift_start = Column(DateTime, nullable=False, default=datetime.utcnow)
-    shift_end = Column(DateTime, nullable=True)
-    status = Column(String(50), nullable=False, default="Active")
+    shift_start = Column(DateTime(timezone=True), nullable=False, default=utcnow)
+    shift_end = Column(DateTime(timezone=True), nullable=True)
+    status = Column(String(50), nullable=False, default="Active")  # Active, Ended
+    notes = Column(Text, nullable=True)
 
     staff = relationship("User", back_populates="shifts")

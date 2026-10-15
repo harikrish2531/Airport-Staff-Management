@@ -23,8 +23,7 @@ class UserResponse(UserBase):
     id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class Token(BaseModel):
@@ -46,8 +45,7 @@ class ZoneCreate(ZoneBase):
 class ZoneResponse(ZoneBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Task Assignment Schemas ---
@@ -67,8 +65,7 @@ class TaskAssignmentResponse(BaseModel):
     completed_at: Optional[datetime] = None
     staff: Optional[UserResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Task Schemas ---
@@ -81,6 +78,13 @@ class TaskBase(BaseModel):
 
 class TaskCreate(TaskBase):
     assigned_staff_id: Optional[int] = None
+
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    zone_id: Optional[int] = None
+    priority: Optional[str] = None
 
 
 class TaskStatusUpdate(BaseModel):
@@ -96,23 +100,29 @@ class TaskResponse(TaskBase):
     zone: Optional[ZoneResponse] = None
     assignments: List[TaskAssignmentResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Shift Schemas ---
-class ShiftBase(BaseModel):
+class ShiftCreate(BaseModel):
+    staff_id: int
+    shift_start: Optional[datetime] = None
+    notes: Optional[str] = None
+
+
+class ShiftEnd(BaseModel):
+    notes: Optional[str] = None
+
+
+class ShiftResponse(BaseModel):
+    id: int
     staff_id: int
     shift_start: datetime
     shift_end: Optional[datetime] = None
-    status: str = "Active"
+    status: str
+    staff: Optional[UserResponse] = None
 
-
-class ShiftResponse(ShiftBase):
-    id: int
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Standard API Response Wrapper ---
